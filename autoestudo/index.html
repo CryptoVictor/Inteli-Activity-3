@@ -1,0 +1,75 @@
+<!DOCTYPE html> <!-- Declaração do tipo de documento -->
+<html lang="en"> <!-- Seleção da linguagem humana da página-->
+<head> <!-- Head do documento -->
+    <meta charset="UTF-8"> <!-- Definição da codificação de caracteres -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Readequação do tamanho da tela para cada dispositivo -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script> <!-- Importação da biblioteca Phaser -->
+    <title>Exercício do Pássaro</title> <!-- Título da página -->
+    <style> /* Estilo da página */
+        body { /* Estilização do body da página */
+            display: flex; /* Exibição do conteúdo em linha */
+            justify-content: center; /* Centralização do conteúdo */
+            align-items: center; /* Alinhamento do conteúdo */
+            height: 100vh; /* Altura do body */
+            margin: 0; /* Margem do body */
+        } 
+    </style>
+</head>
+<body> <!-- body da página -->
+<script> // Script da página
+    var config = {  // Configuração do jogo
+        type: Phaser.AUTO, // Tipo de renderização
+        width: 800, // Largura do jogo
+        height: 600, // Altura do jogo
+
+        scene: { // Cena do jogo
+            preload: preload, // Set de pré-carregamento do jogo
+            create: create, // Set de criação do jogo
+            update: update // Set de atualização do jogo
+        }
+    };
+
+    var game = new Phaser.Game(config); // variação de criação do jogo com a configuração setada
+    var passarinho; // variável que representa o passarinho
+    var angulo = 0; // variável do angulo de veriação
+    var centroX = 400; // variável de posição do centro em x
+    var centroY = 300; // variável de posição do centro em y
+    var raio = 200; // variável de tamanho do raio
+    var velocidade = 0.02; // variável de velocidade de rotação
+
+    function preload() {  // função de pré-carregamento do jogo
+        this.load.image('bg', 'assets/bg_space.png'); // carregamento da imagem de fundo
+        this.load.spritesheet('bird', 'assets/bird-red.png', { frameWidth: 75, frameHeight: 75 }); // carregamento do sprite do pássaro
+    }
+
+    function create() { // função de criação do jogo
+        this.add.image(400, 300, 'bg').setScale(1.2); // adição da imagem de fundo com escala de 1.2 o tamanho original
+        passarinho = this.add.sprite(100, 300, 'bird').setScale(1.3); // adição do sprite do pássaro com escala de 1.3 o tamanho original
+
+        this.anims.create({ // criação da animação do pássaro
+            key: 'fly', // chave da animação
+            frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 7 }), // geração dos frames da animação
+            frameRate: 10, // taxa de frames
+            repeat: -1 // repetição da animação
+        });
+
+        passarinho.anims.play('fly', true); // execução da animação do pássaro
+    }
+
+    function update() { // função de atualização do jogo    
+        angulo += velocidade;  // o angulo aumenta a si mesmo sempre o valor da velocidade
+        passarinho.x = centroX + raio * Math.cos(angulo); // a posição do passarinho em x é calculada pegando o centro da tela em x e somando com o raio vezes o cosseno do angulo de inclinação que aumenta a si mesmo sempre o valor da velocidade  
+        passarinho.y = centroY + raio * Math.sin(angulo); // a posição do passarinho em y é calculada pegando o centro da tela em y e somando com o raio vezes o seno do angulo de inclinação que aumenta a si mesmo sempre o valor da velocidade  
+
+        for (let i=0; i<100; i++) { // loop for implementado para o flip do sprite do passarinho não ser instantâneo
+            if (passarinho.x > centroX) { // caso o passarinho na posição x já tenha passado do centro de X, flipar (a imagem se inverter) os sprites dele no eixo x
+                passarinho.flipX = true; // colocando a flipagem como true para que a imagem se inverta
+            } else { // caso o passarinho não esteja na posição x que já tenha passado do centro de X, não flipar (a imagem se inverter) os sprites dele no eixo x
+                passarinho.flipX = false;    // colocando a flipagem como false para que a imagem não se inverta
+            }
+        }
+    }
+</script>
+</body>
+</html>
+
